@@ -70,7 +70,11 @@ class TCPConnection {
                 ex = (String)answer.get("ex", "");
             }
             try{
-                ErrorRecorder.record("Keep alive ping for "+ connection.peerAddress.toString() +" failed, local addr: "+connection.channel.getLocalAddress().toString() + " ,errorCode: "+errorCode+" ,infos: " + ex);
+                if (connection.channel.getLocalAddress() == null){
+                    ErrorRecorder.record("Keep alive ping for "+ connection.peerAddress.toString() +" failed, local addr: channel's socket is not bound ,errorCode: "+errorCode+" ,infos: " + ex);
+                }else {
+                    ErrorRecorder.record("Keep alive ping for " + connection.peerAddress.toString() + " failed, local addr: " + connection.channel.getLocalAddress().toString() + " ,errorCode: " + errorCode + " ,infos: " + ex);
+                }
             }catch (IOException ioException) {
                 ErrorRecorder.record("get connection local addr exeception ", ioException);
             }

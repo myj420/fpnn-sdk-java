@@ -3,6 +3,7 @@ import com.fpnn.sdk.proto.Answer;
 import com.fpnn.sdk.proto.Quest;
 
 import java.net.InetSocketAddress;
+import java.util.Scanner;
 
 import static java.lang.Thread.sleep;
 
@@ -10,7 +11,7 @@ public class ConnectionEvents {
 
     public static void main(String[] args) {
 
-        TCPClient client = TCPClient.create("52.83.245.22", 13609);
+        TCPClient client = TCPClient.create("52.83.245.22", 12345);
 
         ConnectionConnectedCallback openCb = (InetSocketAddress peerAddress, boolean connected) -> {
             System.out.println("--- opened: connected status is " + connected);
@@ -24,6 +25,7 @@ public class ConnectionEvents {
             System.out.println("Connection has closed by error? " + causedByError);
         };
 
+        client.setKeepAlive(true);
         client.setConnectedCallback(openCb);
         client.setWillCloseCallback(willCloseCb);
         client.setHasClosedCallback(closedCb);
@@ -64,12 +66,14 @@ public class ConnectionEvents {
             e.printStackTrace();
         }
 
-        client.close();
+//        client.close();
         //-- Wait for close event is processed.
         try {
             sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        Scanner input = new Scanner(System.in);
+        String str = input.next();
     }
 }
